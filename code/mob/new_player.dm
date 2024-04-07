@@ -292,7 +292,7 @@ var/global/datum/mutex/limited/latespawning = new(5 SECONDS)
 			var/round_num = src.client.player.get_rounds_participated()
 			if (!isnull(round_num) && round_num < JOB.rounds_needed_to_play) //they havent played enough rounds!
 				return 0
-		if (JOB.limit < 0 || countJob(JOB.name) < JOB.limit)
+		if (JOB.limit < 0 || JOB.assigned < JOB.limit)
 			return 1
 		return 0
 
@@ -326,7 +326,10 @@ var/global/datum/mutex/limited/latespawning = new(5 SECONDS)
 			if (isnull(character))
 				global.latespawning.unlock()
 				return
-
+			JOB.assigned++
+			if (JOB.counts_as)
+				var/datum/job/other = find_job_in_controller_by_string(JOB.counts_as)
+				other.assigned++
 			// Stop adding non game mode logic BEFORE game modes!
 			if(istype(ticker.mode, /datum/game_mode/football))
 				var/datum/game_mode/football/F = ticker.mode
@@ -387,6 +390,14 @@ var/global/datum/mutex/limited/latespawning = new(5 SECONDS)
 				var/starting_loc = null
 				starting_loc = pick_landmark(LANDMARK_LATEJOIN, locate(round(world.maxx / 2), round(world.maxy / 2), 1))
 				character.set_loc(starting_loc)
+
+			var/player_count = 0
+			for (var/client/client in clients)
+				if (!istype(client.mob.loc, /obj/cryotron) && !istype(client.mob, /mob/new_player)) //don't count cryoed or lobby players
+					player_count++
+			for(var/datum/job/staple_job in job_controls.staple_jobs) //we'll just assume only staple jobs have variable limits for now
+				if (staple_job.variable_limit)
+					staple_job.recalculate_limit(player_count)
 
 			if (isliving(character))
 				var/mob/living/LC = character
@@ -449,7 +460,7 @@ var/global/datum/mutex/limited/latespawning = new(5 SECONDS)
 			// Show unavailable jobs, but no joining them
 			limit = 0
 
-		var/c = countJob(J.name) 	// gross
+		var/c = J.assigned
 		if (limit == 0 && c == 0)
 			// 0 slots, nobody in it, don't show it
 			return
@@ -680,7 +691,7 @@ a.latejoin-card:hover {
 				if (IsJobAvailable(J) && !J.no_late_join)
 					var/hover_text = J.short_description || "Join the round as [J.name]."
 					dat += "<tr><td style='width:100%'>"
-					dat += {"<a href='byond://?src=\ref[src];SelectedJob=\ref[J];latejoin=prompt' title='[hover_text]'><font color=[J.linkcolor]>[J.name]</font></a> ([countJob(J.name)][J.limit == -1 ? "" : "/[J.limit]"])<br>"}
+					dat += {"<a href='byond://?src=\ref[src];SelectedJob=\ref[J];latejoin=prompt' title='[hover_text]'><font color=[J.linkcolor]>[J.name]</font></a> ([J.assigned][J.limit == -1 ? "" : "/[J.limit]"])<br>"}
 					dat += "</td></tr>"
 		dat += "</table></div>"
 
@@ -953,6 +964,7 @@ a.latejoin-card:hover {
 	say(message)
 		if(dd_hasprefix(message, "*"))
 			return
+		SEND_SIGNAL(src, COMSIG_MOB_SAY, message)
 		src.ooc(message)
 
 #ifdef TWITCH_BOT_ALLOWED
