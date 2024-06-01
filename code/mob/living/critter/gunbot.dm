@@ -1,6 +1,7 @@
 TYPEINFO(/mob/living/critter/robotic/gunbot)
-	mats = list("MET-2" = 12, "CON-2" = 12, "DEN-1" = 6)
-
+	mats = list("metal_dense" = 12,
+				"conductive_high" = 12,
+				"dense" = 6)
 /mob/living/critter/robotic/gunbot
 	name = "robot"
 	real_name = "robot"
@@ -26,7 +27,7 @@ TYPEINFO(/mob/living/critter/robotic/gunbot)
 
 	ai_retaliates = FALSE
 	ai_type = /datum/aiHolder/ranged
-	faction = FACTION_DERELICT
+	faction = list(FACTION_DERELICT)
 	is_npc = TRUE
 
 	var/speak_lines = TRUE
@@ -221,7 +222,7 @@ TYPEINFO(/mob/living/critter/robotic/gunbot)
 	speak_lines = FALSE
 
 	is_npc = FALSE
-	faction = FACTION_SYNDICATE
+	faction = list(FACTION_SYNDICATE)
 
 	setup_hands()
 		..()
@@ -299,8 +300,10 @@ TYPEINFO(/mob/living/critter/robotic/gunbot)
 
 
 TYPEINFO(/mob/living/critter/robotic/gunbot/mrl)
-	mats = list("MET-2" = 16, "CON-2" = 12, "DEN-2" = 6, "POW-1"=4)
-
+	mats = list("metal_dense" = 16,
+				"conductive_high" = 12,
+				"dense_super" = 6,
+				"energy" = 4)
 /mob/living/critter/robotic/gunbot/mrl
 	icon_state = "gunbot-base"
 	setup_hands()
@@ -312,11 +315,13 @@ TYPEINFO(/mob/living/critter/robotic/gunbot/mrl)
 		HH.icon_state = "hand38"
 		HH.limb_name = "Fomalhaut MRL Arm"
 
-		src.UpdateOverlays(image(src.icon,"gunbot-mrl"), "guns")
+		src.UpdateOverlays(image(src.icon,"gunbot-mrls"), "guns")
 
 TYPEINFO(/mob/living/critter/robotic/gunbot/flame)
-	mats = list("MET-2" = 12, "CON-2" = 12, "DEN-1" = 6, "POW-2"=4)
-
+	mats = list("metal_dense" = 12,
+				"conductive_high" = 12,
+				"dense" = 6,
+				"energy_high" = 4)
 /mob/living/critter/robotic/gunbot/flame
 	icon_state = "gunbot-base"
 	setup_hands()
@@ -331,7 +336,10 @@ TYPEINFO(/mob/living/critter/robotic/gunbot/flame)
 		src.UpdateOverlays(image(src.icon, "gunbot-flamethrower"), "guns")
 
 TYPEINFO(/mob/living/critter/robotic/gunbot/cannon)
-	mats = list("MET-3" = 12, "CON-2" = 12, "DEN-1" = 6, "POW-1"=4)
+	mats = list("metal_superdense" = 12,
+				"conductive_high" = 12,
+				"dense" = 6,
+				"energy" = 4)
 /mob/living/critter/robotic/gunbot/cannon
 	icon_state = "gunbot-base"
 	setup_hands()
@@ -359,7 +367,10 @@ TYPEINFO(/mob/living/critter/robotic/gunbot/cannon)
 		src.UpdateOverlays(image(src.icon, "gunbot-striker"), "guns")
 
 TYPEINFO(/mob/living/critter/robotic/gunbot/minigun)
-	mats = list("MET-2" = 18, "CON-2" = 12, "DEN-1" = 6, "POW-1"=4)
+	mats = list("metal_dense" = 18,
+				"conductive_high" = 12,
+				"dense" = 6,
+				"energy" = 4)
 /mob/living/critter/robotic/gunbot/minigun
 	icon_state = "gunbot-base"
 	setup_hands()
@@ -375,7 +386,10 @@ TYPEINFO(/mob/living/critter/robotic/gunbot/minigun)
 		src.UpdateOverlays(image(src.icon, "gunbot-heavy"), "guns")
 
 TYPEINFO(/mob/living/critter/robotic/gunbot/chainsaw)
-	mats = list("MET-3" = 12, "CON-2" = 12, "DEN-1" = 6, "POW-1"=4)
+	mats = list("metal_superdense" = 12,
+				"conductive_high" = 12,
+				"dense" = 6,
+				"energy" = 4)
 /mob/living/critter/robotic/gunbot/chainsaw
 	icon_state = "gunbot-base"
 	setup_hands()
@@ -394,7 +408,7 @@ TYPEINFO(/mob/living/critter/robotic/gunbot/chainsaw)
 		S.cant_self_remove = 1
 		S.cant_other_remove = 1
 
-		src.UpdateOverlays(image(src.icon, "gunbot-chainsaw"), "guns")
+		src.UpdateOverlays(image(src.icon, "gunbot-saw"), "guns")
 
 
 /obj/machinery/fabricator/gunbot
